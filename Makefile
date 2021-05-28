@@ -69,7 +69,7 @@ $(SKYNET_BUILD_PATH)/platform.dll : platform/platform.c platform/epoll.c platfor
 	$(CC) $(CFLAGS) $(SHARED) $^ -lws2_32 -lwsock32 -o $@ -DDONOT_USE_IO_EXTEND -DFD_SETSIZE=1024
 
 $(SKYNET_BUILD_PATH)/skynet.dll : $(foreach v, $(SKYNET_SRC), skynet-src/$(v)) | $(LUA_LIB) $(SKYNET_BUILD_PATH)/platform.dll
-	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) -o $@ $^ -Iskynet-src $(LDFLAGS) $(SKYNET_LIBS) $(SKYNET_DEFINES)
+	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) -o $@ $^ -Iskynet-src $(LDFLAGS) $(SKYNET_LIBS) $(SKYNET_DEFINES) -Wl,--subsystem,windows,--out-implib,$(SKYNET_BUILD_PATH)/skynet.lib
 
 $(SKYNET_BUILD_PATH)/skynet.exe : $(foreach v, $(SKYNET_EXE_SRC), skynet-src/$(v))  | $(SKYNET_BUILD_PATH)/skynet.dll
 	$(CC) -includeplatform.h $(CFLAGS) -o $@ $^ -Iskynet-src $(EXPORT) $(LDFLAGS) $(SHAREDLDFLAGS) $(SKYNET_DEFINES)	
