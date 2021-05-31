@@ -86,31 +86,31 @@ $(CSERVICE_PATH) :
 
 define CSERVICE_TEMP
   $$(CSERVICE_PATH)/$(1).so : service-src/service_$(1).c | $$(CSERVICE_PATH)
-	$$(CC) -includeplatform.h $$(CFLAGS) $$(SHARED) $$< -o $$@ -Iskynet-src $$(SHAREDLDFLAGS) 
+	$$(CC) -includeplatform.h $$(CFLAGS) $$(SHARED) $$< -o $$@ -Iskynet-src $$(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 endef
 
 $(foreach v, $(CSERVICE), $(eval $(call CSERVICE_TEMP,$(v))))
 
 $(LUA_CLIB_PATH)/skynet.so : $(addprefix lualib-src/,$(LUA_CLIB_SKYNET)) | $(LUA_CLIB_PATH)
-	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) $^ -o $@ -Iskynet-src -Iservice-src -Ilualib-src  $(SHAREDLDFLAGS)
+	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) $^ -o $@ -Iskynet-src -Iservice-src -Ilualib-src  $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH)/bson.so : lualib-src/lua-bson.c | $(LUA_CLIB_PATH)
-	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) -Iskynet-src $^ -o $@ -I$(PLATFORM_INC)  $(SHAREDLDFLAGS)
+	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) -Iskynet-src $^ -o $@ -I$(PLATFORM_INC)  $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH)/md5.so : 3rd/lua-md5/md5.c 3rd/lua-md5/md5lib.c 3rd/lua-md5/compat-5.2.c | $(LUA_CLIB_PATH)
-	$(CC) $(CFLAGS) $(SHARED) -I3rd/lua-md5 $^ -o $@  $(SHAREDLDFLAGS)
+	$(CC) $(CFLAGS) $(SHARED) -I3rd/lua-md5 $^ -o $@  $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH)/client.so : lualib-src/lua-clientsocket.c lualib-src/lua-crypt.c lualib-src/lsha1.c | $(LUA_CLIB_PATH)
-	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) $^ -o $@ -lpthread  $(SHAREDLDFLAGS)
+	$(CC) -includeplatform.h $(CFLAGS) $(SHARED) $^ -o $@ -lpthread  $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH)/sproto.so : lualib-src/sproto/sproto.c lualib-src/sproto/lsproto.c | $(LUA_CLIB_PATH)
-	$(CC) $(CFLAGS) $(SHARED) -Ilualib-src/sproto $^ -o $@  $(SHAREDLDFLAGS) 
+	$(CC) $(CFLAGS) $(SHARED) -Ilualib-src/sproto $^ -o $@  $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH)/ltls.so : lualib-src/ltls.c | $(LUA_CLIB_PATH)
-	$(CC) $(CFLAGS) $(SHARED) -Iskynet-src -L$(TLS_LIB) -I$(TLS_INC) $^ -o $@ -lssl $(SHAREDLDFLAGS) 
+	$(CC) $(CFLAGS) $(SHARED) -Iskynet-src -L$(TLS_LIB) -I$(TLS_INC) $^ -o $@ -lssl $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH)/lpeg.so : 3rd/lpeg/lpcap.c 3rd/lpeg/lpcode.c 3rd/lpeg/lpprint.c 3rd/lpeg/lptree.c 3rd/lpeg/lpvm.c | $(LUA_CLIB_PATH)
-	$(CC) $(CFLAGS) $(SHARED) -I3rd/lpeg $^ -o $@  $(SHAREDLDFLAGS) 
+	$(CC) $(CFLAGS) $(SHARED) -I3rd/lpeg $^ -o $@  $(SHAREDLDFLAGS) $(SKYNET_DEFINES)
 
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet.exe $(SKYNET_BUILD_PATH)/skynet.dll $(SKYNET_BUILD_PATH)/platform.dll $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
